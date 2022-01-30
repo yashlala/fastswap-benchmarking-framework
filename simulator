@@ -6,8 +6,7 @@ import subprocess
 import pandas as pd
 
 def main():
-    fields = [ 'major_pagefault_latency',
-            'minor_pagefault_latency',
+    fields = ['major_pagefault_latency',
             'minor_pagefault_latency',
             'swap_cache_hits',
             'swapin_count',
@@ -20,13 +19,12 @@ def main():
         samples.append(sample_debugfs(fields))
 
     samples = pd.DataFrame(data=samples, columns=fields)
-    samples.to_csv(f'./{"-".join(sys.argv[2:])}samples.csv', index=False)
+    samples.to_csv('samples.csv', index=False)
 
 
 def start_job(cmdline, memory):
     cmdline = ['systemd-run', '--scope', 
-            '-p', f'MemoryMax={memory}',
-            '-p', f'MemorySwapMax=infinity'] + cmdline
+            '-p', 'MemoryLimit=' + memory] + cmdline
     return subprocess.Popen(args=cmdline)
 
 
